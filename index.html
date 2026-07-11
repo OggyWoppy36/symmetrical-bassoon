@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Java Swing Demo</title>
+    <!-- 1. Load the CheerpJ Runtime Library -->
+    <script src="https://leaningtech.com"></script>
+</head>
+<body>
+    <script>
+        // 2. Initialize CheerpJ
+        cheerpjInit();
+        
+        // 3. Run your executable JAR file 
+        // (Replace "yourfile.jar" with your exact filename and "MainClassName" with your class containing the main method)
+        cheerpjCreateDisplay(-1, -1).then(() => {
+            cheerpjRunJar("/app/BallBounce.jar", "Game");
+        });
+    </script>
+</body>
+</html>
