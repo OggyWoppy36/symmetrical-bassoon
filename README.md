@@ -2,7 +2,7 @@ Simple ball bounce simulation/demo for stardance.
 
 **How to play:**
 
-There's not much you can do but I tried to make it reasonably fun. You can use your left and right arrow keys to speed up/slow down the ball. Also you can click and drag with your mouse to draw your own wall. Press 'P' to pause.
+There's not much you can do but I tried to make it reasonably fun. You can use your left and right arrow keys to speed up/slow down the ball. Careful not to make it too fast! You can also click and drag with your mouse to draw your own wall. Press 'P' to pause.
 
 **Instructions for running:**
 
