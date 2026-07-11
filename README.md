@@ -1,4 +1,4 @@
-Simple ball bounce simulation/demo for stardance.
+Simple ball bounce simulation/demo with collision and walls.
 
 ## **How to play:**
 
