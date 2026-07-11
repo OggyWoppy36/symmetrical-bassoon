@@ -13,8 +13,10 @@ public class Game extends JPanel implements ActionListener {
     private Ball ball;
     private ArrayList<CollisionShape> walls = new ArrayList<>();
     public static final int DIMS = 800;
+    public static int STEPS_PER_FRAME = 1;
     private Timer timer;
     private MouseTracker mouse;
+
     
     public Game() {
         setPreferredSize(new Dimension(DIMS, DIMS));
@@ -23,13 +25,13 @@ public class Game extends JPanel implements ActionListener {
         requestFocusInWindow();
         
         ball = new Ball(DIMS/2.0,DIMS/4.0,30,new Vector(2,2),Color.CYAN);
-        walls.add(new CollisionShape(Vector.ZERO,DIMS,-20,Color.RED));
-        walls.add(new CollisionShape(Vector.mult(Vector.DOWN,DIMS),DIMS,20,Color.RED));
-        walls.add(new CollisionShape(Vector.ZERO,-20,DIMS,Color.RED));
-        walls.add(new CollisionShape(Vector.mult(Vector.RIGHT,DIMS),20,DIMS,Color.RED));
-        walls.add(new CollisionShape(new Vector(50,120), 200, 100, Color.RED));
-        walls.add(new CollisionShape(new Vector(600,300), 50, 350, Color.MAGENTA));
-        
+        walls.add(new CollisionShape(Vector.ZERO,DIMS,-50,Color.RED));
+        walls.add(new CollisionShape(Vector.mult(Vector.DOWN,DIMS),DIMS,50,Color.RED));
+        walls.add(new CollisionShape(Vector.ZERO,-50,DIMS,Color.RED));
+        walls.add(new CollisionShape(Vector.mult(Vector.RIGHT,DIMS),50,DIMS,Color.RED));
+        //walls.add(new CollisionShape(new Vector(50,120), 200, 100, Color.RED));
+        //walls.add(new CollisionShape(new Vector(600,300), 50, 350, Color.MAGENTA));
+        System.out.println(walls.get(2));
 
         addKeyListener(new KeyAdapter() {
             @Override
@@ -66,11 +68,13 @@ public class Game extends JPanel implements ActionListener {
                     mouse.setLeft(false);
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
                     mouse.setRight(false);
+                    makeRect();
                 }
             }
 
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
+                double rot = e.getPreciseWheelRotation();
                 
             }
 
@@ -91,6 +95,13 @@ public class Game extends JPanel implements ActionListener {
 
         timer = new Timer(16, this);
         timer.start();
+    }
+
+    public void makeRect() {
+        CollisionShape.setType(CollisionShape.types.CENTER);
+        CollisionShape w = new CollisionShape(mouse.getPos(),45,80,  randColor());
+        walls.add(w);
+        CollisionShape.setType(CollisionShape.types.CORNER);
     }
 
     public void createRect(MouseTracker mouse) {
@@ -116,9 +127,11 @@ public class Game extends JPanel implements ActionListener {
     }
 
     private void updateGame() {
-        ball.updatePos();
-        for (CollisionShape wall : walls) {
-            ball.checkCollision(wall,true);
+        for (int i=0; i<STEPS_PER_FRAME; i++) {
+            ball.updatePos(1.0/STEPS_PER_FRAME);
+            for (CollisionShape wall : walls) {
+                ball.checkCollision(wall,true);
+            }
         }
     }
 
@@ -127,7 +140,8 @@ public class Game extends JPanel implements ActionListener {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
+        g2.setColor(Color.DARK_GRAY);
+        g2.fillRect(0,0,DIMS,DIMS);
         for (CollisionShape wall : walls) {
             wall.render(g2);
         }

@@ -8,6 +8,7 @@ public class MouseTracker {
     // private Vector upPos;
     private Vector currPos;
     
+    
     public MouseTracker() {
         isLeftPressed = false;
         isRightPressed = false;
@@ -23,6 +24,7 @@ public class MouseTracker {
         int w = Game.DIMS;
         onScreen = !(v.x > w || v.x < 0 || v.y > w || v.y < 0);
     }
+
     public void setPos(Vector v) {
         currPos = v.copy();
         int w = Game.DIMS;

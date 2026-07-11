@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.geom.Point2D;
+
 
 @SuppressWarnings("unused")
 public class Ball {
@@ -14,8 +16,8 @@ public class Ball {
         color = c;
     }
 
-    public void updatePos() {
-        pos = Vector.add(pos, vel);
+    public void updatePos(double stepMult) {
+        pos = Vector.add(pos, Vector.mult(vel,stepMult));
     }
 
     public void setVel(Vector v) {
@@ -24,13 +26,6 @@ public class Ball {
 
     public Vector getVel() { return vel.copy(); }
     public Vector getPos() { return pos.copy(); }
-
-    public void render(Graphics2D g) {
-        g.setColor(color);
-        int drawX = (int) (pos.x - radius);
-        int drawY = (int) (pos.y - radius);
-        g.fillOval(drawX, drawY, (int) (radius * 2), (int) (radius * 2));
-    }
 
     public boolean checkCollision(CollisionShape wall, boolean resolve) {
         
@@ -76,5 +71,32 @@ public class Ball {
         double dot = vel.x * nx + vel.y * ny;
         vel.x -= 2 * dot * nx;
         vel.y -= 2 * dot * ny;
+    }
+
+    public void render(Graphics2D g) {
+        float cx = (float) pos.x;
+        float cy = (float) pos.y;
+        float r = (float) radius;
+
+        g.setColor(new Color(0, 0, 0, 80));
+        g.fillOval((int) (cx - r - 3), (int) (cy - r + 5), (int) (r * 2), (int) (r * 2));
+
+        // Light source offset toward upper-left, same direction as your wall bevels
+        Point2D cent = new Point2D.Float(cx, cy);
+        Point2D focus = new Point2D.Float(cx + r * 0.15f, cy - r * 0.5f);
+
+        float[] fracts = {0f, 0.7f, 1f};
+        Color[] shades = {
+            color.brighter().brighter(),
+            color,                       
+            color.darker().darker()      
+        };
+
+        RadialGradientPaint lightPaint = new RadialGradientPaint(cent, r, focus, fracts, shades, MultipleGradientPaint.CycleMethod.NO_CYCLE);
+        Paint old = g.getPaint();
+
+        g.setPaint(lightPaint);
+        g.fillOval((int) (cx-r), (int) (cy-r), (int) (r*2), (int) (r*2));
+        g.setPaint(old); // restore, so this doesn't leak into other draw calls
     }
 }
