@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Java Swing Demo</title>
-    <!-- 1. Load CheerpJ Loader Script -->
-    <script src="https://leaningtech.com"></script>
+    <!-- 1. CORRECTED: Points to cj3loader.js for CheerpJ 3.0 -->
+    <script src="https://cjrtnc.leaningtech.com/3.0/cj3loader.js"></script>
 </head>
 <body>
     <script type="module">
         // 2. Wait for CheerpJ engine to download and initialize
         await cheerpjInit();
         
-        // 3. Open an 800x800 display area
+        // 3. Open your 800x800 display area matching your DIMS variable
         cheerpjCreateDisplay(800, 800);
         
         // 4. Run the JAR using CheerpJ's required virtual server mount point /app/
