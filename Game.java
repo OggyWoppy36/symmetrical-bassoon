@@ -15,6 +15,7 @@ public class Game extends JPanel implements ActionListener {
     public static final int DIMS = 800;
     public static int STEPS_PER_FRAME = 5;
     private final Timer timer;
+    private boolean paused = false;
     private MouseTracker mouse;
 
     
@@ -110,9 +111,17 @@ public class Game extends JPanel implements ActionListener {
 
     public void pause() {
         if (timer.isRunning()) {
-            timer.stop();
+            //timer.stop();
+            mouse.setVisible(false);
+            timer.stop(); 
+            paused = true;
+            repaint();
         }
-        else timer.start();
+        else {
+            mouse.setVisible(true);
+            paused = false;
+            timer.start();
+        }
     }
 
     @Override
@@ -141,6 +150,11 @@ public class Game extends JPanel implements ActionListener {
             wall.render(g2);
         }
         mouse.render(g2);
+        if (paused) {
+            g2.setFont(new Font("Arial", Font.BOLD, 50));
+            g2.setColor(Color.WHITE);
+            g2.drawString("Game Paused",(DIMS-332)/2,60);
+        }
     }
 
     public static boolean checkBallCollision(CollisionShape c) { 

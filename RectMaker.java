@@ -18,6 +18,7 @@ public class RectMaker {
     }
 
     public void render(Graphics2D g) {
+        if (!visible) return;
         CollisionShape c = createRect();
         if (Game.checkBallCollision(c)) {
             g.setColor(new Color(255,20,20,100));
@@ -46,6 +47,7 @@ public class RectMaker {
         return c;
     }
 
+    public void setVisible(boolean b) { visible = b; }
     public void setPos(Vector p) { pos = p.copy(); }
     public void setWidth(double w) { width = Math.max(w,MIN_DIM); }
     public void setHeight(double h) { height = Math.max(h,MIN_DIM); }
@@ -78,4 +80,5 @@ public class RectMaker {
      * @return Returns angle in DEGREES
      */
     public double getAngle() { return angle; }
+    public boolean isVisible() { return visible; }
 }

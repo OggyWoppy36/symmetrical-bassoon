@@ -8,6 +8,7 @@ public class MouseTracker {
     private Vector downPos;
     private Vector currPos;
     private RectMaker selection;
+    private boolean visible = true;
     
     public MouseTracker() {
         isLeftPressed = false;
@@ -18,23 +19,30 @@ public class MouseTracker {
         selection = new RectMaker(Vector.ZERO.copy(), 50, 50, 0);
     }
 
+    public void setVisible(boolean b) { visible = b; selection.setVisible(b);}
     public void setLeft(boolean b) { isLeftPressed = b; }
     public void setRight(boolean b) { isRightPressed = b; }
+    public void checkOnScreen() {
+        Vector v = currPos.copy();
+        int w = Game.DIMS;
+        onScreen = !(v.x > w || v.x < 0 || v.y > w || v.y < 0);
+        setVisible(visible);
+    }
+
 
     public void setDownPos(Vector v) {
         downPos = v.copy();
-        int w = Game.DIMS;
-        onScreen = !(v.x > w || v.x < 0 || v.y > w || v.y < 0);
+        checkOnScreen();
     }
 
     public void setPos(Vector v) {
         currPos = v.copy();
-        int w = Game.DIMS;
-        onScreen = !(v.x > w || v.x < 0 || v.y > w || v.y < 0);
+        checkOnScreen();
         selection.setPos(currPos);
     }
 
     public void render(Graphics2D g) {
+        if (!visible) return;
         selection.render(g);
     }
 
@@ -58,6 +66,7 @@ public class MouseTracker {
         return selection.createRect();
     }
 
+    public boolean isVisible() { return visible; }
     public boolean leftPress() { return isLeftPressed; }
     public boolean rightPress() { return isRightPressed; }
     public boolean isOnScreen() { return onScreen; }
