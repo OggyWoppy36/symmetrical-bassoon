@@ -10,28 +10,25 @@ public class Game extends JPanel implements ActionListener {
         RIGHT,
         DOWN
     }
-    private Ball ball;
-    private ArrayList<CollisionShape> walls = new ArrayList<>();
+    public static Ball ball;
+    public ArrayList<CollisionShape> walls = new ArrayList<>();
     public static final int DIMS = 800;
-    public static int STEPS_PER_FRAME = 1;
-    private Timer timer;
+    public static int STEPS_PER_FRAME = 5;
+    private final Timer timer;
     private MouseTracker mouse;
 
     
     public Game() {
         setPreferredSize(new Dimension(DIMS, DIMS));
-        setBackground(Color.BLACK);
+        setBackground(Color.DARK_GRAY);
         setFocusable(true);
         requestFocusInWindow();
         
-        ball = new Ball(DIMS/2.0,DIMS/4.0,30,new Vector(2,2),Color.CYAN);
+        ball = new Ball(DIMS/2.0,DIMS/3.0,30,new Vector(2,2),Color.CYAN);
         walls.add(new CollisionShape(Vector.ZERO,DIMS,-50,Color.RED));
         walls.add(new CollisionShape(Vector.mult(Vector.DOWN,DIMS),DIMS,50,Color.RED));
         walls.add(new CollisionShape(Vector.ZERO,-50,DIMS,Color.RED));
         walls.add(new CollisionShape(Vector.mult(Vector.RIGHT,DIMS),50,DIMS,Color.RED));
-        //walls.add(new CollisionShape(new Vector(50,120), 200, 100, Color.RED));
-        //walls.add(new CollisionShape(new Vector(600,300), 50, 350, Color.MAGENTA));
-        System.out.println(walls.get(2));
 
         addKeyListener(new KeyAdapter() {
             @Override
@@ -44,6 +41,9 @@ public class Game extends JPanel implements ActionListener {
                         ball.setVel(Vector.mult(ball.getVel(),0.8f));
                     }
                     case KeyEvent.VK_P -> pause();
+                    case KeyEvent.VK_ALT -> {
+                        e.consume();
+                    }
                 }
             }
         });
@@ -61,21 +61,36 @@ public class Game extends JPanel implements ActionListener {
             }
 
             @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    CollisionShape w = mouse.createRect();
+                    if (ball.checkCollision(w, false)) {
+                        return;
+                    }
+                    walls.add(w);
+                }
+            }
+
+            @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     mouse.setPos(new Vector(e.getX(),e.getY()));
-                    createRect(mouse);
                     mouse.setLeft(false);
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
                     mouse.setRight(false);
-                    makeRect();
                 }
             }
 
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                double rot = e.getPreciseWheelRotation();
-                
+                double x = e.getPreciseWheelRotation();
+                if (e.isAltDown()) {
+                    mouse.scrollWidth(x);
+                } else if (e.isShiftDown()) {
+                    mouse.scrollHeight(x);
+                } else {
+                    mouse.scrollRot(x);
+                }
             }
 
             @Override
@@ -83,33 +98,14 @@ public class Game extends JPanel implements ActionListener {
                 mouse.setPos(new Vector(e.getX(), e.getY()));
             }
 
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                mouse.setPos(new Vector(e.getX(), e.getY()));
-            }
-
             
         };
+        addMouseWheelListener(mouseHandler);
         addMouseListener(mouseHandler);
         addMouseMotionListener(mouseHandler);
 
         timer = new Timer(16, this);
         timer.start();
-    }
-
-    public void makeRect() {
-        CollisionShape.setType(CollisionShape.types.CENTER);
-        CollisionShape w = new CollisionShape(mouse.getPos(),45,80,  randColor());
-        walls.add(w);
-        CollisionShape.setType(CollisionShape.types.CORNER);
-    }
-
-    public void createRect(MouseTracker mouse) {
-        CollisionShape w = new CollisionShape(mouse.getDownPos(), mouse.getPos(), randColor());
-        if (ball.checkCollision(w, false)) {
-            return;
-        }
-        walls.add(w);
     }
 
     public void pause() {
@@ -119,7 +115,6 @@ public class Game extends JPanel implements ActionListener {
         else timer.start();
     }
 
-    
     @Override
     public void actionPerformed(ActionEvent e) {
         updateGame();
@@ -140,33 +135,16 @@ public class Game extends JPanel implements ActionListener {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(Color.DARK_GRAY);
-        g2.fillRect(0,0,DIMS,DIMS);
+        
+        ball.render(g2);
         for (CollisionShape wall : walls) {
             wall.render(g2);
         }
-        ball.render(g2);
-
-        if (mouse.leftPress()) {
-            drawSelectionBox(g2);
-        }
+        mouse.render(g2);
     }
 
-    public void drawSelectionBox(Graphics2D g2) {
-        int x = (int) Math.min(mouse.getDownPos().x, mouse.getPos().x);
-        int y = (int) Math.min(mouse.getDownPos().y, mouse.getPos().y);
-        int w = (int) Math.abs(mouse.getDownPos().x - mouse.getPos().x);
-        int h = (int) Math.abs(mouse.getDownPos().y - mouse.getPos().y);
-
-        CollisionShape test = new CollisionShape(new Vector(x,y),w,h,Color.WHITE);
-        if (!ball.checkCollision(test, false)) {
-            g2.setColor(new Color(255, 255, 255, 100));
-        } else {
-            g2.setColor(new Color(255,20,20,100));
-        }
-        g2.fillRect(x, y, w, h);
-        g2.setColor(Color.WHITE);
-        g2.drawRect(x, y, w, h);
+    public static boolean checkBallCollision(CollisionShape c) { 
+        return ball.checkCollision(c, false); 
     }
 
     public static Color randColor() {
@@ -175,7 +153,6 @@ public class Game extends JPanel implements ActionListener {
         float brightness = 0.9f;
         return Color.getHSBColor(hue, saturation, brightness);
     }
-
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("My Game");

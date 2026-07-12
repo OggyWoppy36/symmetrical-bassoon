@@ -1,3 +1,5 @@
+// I praise you with the highest respect o7
+// MVP class (it probably already existed as a library but i felt like making my own)
 public class Vector {
     public double x;
     public double y;
@@ -17,28 +19,24 @@ public class Vector {
         return new Vector(x,y);
     }
 
-    /**
-     * Calculates the difference of Vector b from Vector a (a-b). Non Mutator 
-     * @param a     Vector subtracted from 
-     * @param b     Vector being subtracted
-     **/
+    // non mutator
     public static Vector sub(Vector a, Vector b) {
         return new Vector(a.x-b.x, a.y-b.y);
     }
 
-    //non Mutator
+    // non mutator
     public static Vector add(Vector a, Vector b) {
         return new Vector(a.x+b.x, a.y+b.y);
     }
 
-    //Mutator
+    /** MUTATOR */
     public Vector addTo(Vector v) {
         x += v.x;
         y += v.y;
         return this;
     }
 
-    //non Mutator
+    // non Mutator
     public static Vector mult(Vector v, double m) {
         return new Vector(v.x*m,v.y*m);
     }
@@ -57,11 +55,11 @@ public class Vector {
         return new Vector(x/mag,y/mag);
     }
 
-    //angle in radians
+    //angle in radians 
     public Vector rotated(double ang) {
         double cos = Math.cos(ang);
         double sin = Math.sin(ang);
-        return new Vector(cos*x - sin*y, sin*x - cos*y);
+        return new Vector(cos*x - sin*y, sin*x + cos*y);
     }
 
     @Override

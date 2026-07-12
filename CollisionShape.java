@@ -10,7 +10,7 @@ public class CollisionShape extends Object {
 
     private double width;
     private double height;
-    private double angle = 0;
+    private double angle = 0; //radians
 
     public double up, left, right, down;
 
@@ -25,7 +25,7 @@ public class CollisionShape extends Object {
     public int timer;
 
     public CollisionShape(Vector p, double w, double h, Color c) {
-        color = c;
+        color = c.darker();
         pos = p.copy();
         if (type == types.CENTER) {
             pos = Vector.add(pos, Vector.mult(new Vector(w,h), -0.5));
@@ -50,15 +50,15 @@ public class CollisionShape extends Object {
         return new Vector((left+right) / 2.0, (up+down) / 2.0);
     }
 
-    public double getHalfWidth() { return (right - left) / 2.0; }
-    public double getHalfHeight() { return (down - up) / 2.0; }
     public double getAngle() { return angle; }
+
     /**
-     * @param ang   angle in radians
+     * @param ang   angle in RADIANS
      */
     public void setAngle(double ang) { angle = ang; }
     public void setTimer(int t) { timer = t; }
 
+    // currently unused probably will stay that way :P
     public boolean update() {
         if (timer > 0) timer -= 1;
         if (timer == 0) {
@@ -91,11 +91,13 @@ public class CollisionShape extends Object {
         }
     }
 
+    // it... renders the drop shadow...
     public void renderDropShadow(Graphics2D g) {
         g.setColor(new Color(0, 0, 0, 80));
         g.fillRect((int) (pos.x - 3), (int) (pos.y + 5), (int) (width), (int) (height));
     }
 
+    // hard coded shading AH O__O
     public void renderShading(Graphics2D g) {
         g.setColor(color.darker());
         int[] xpoints = {(int) left, (int) centers[1], (int) centers[1], (int) left};
@@ -130,6 +132,10 @@ public class CollisionShape extends Object {
         return new Color(r,g,bb,aa);
     }
 
+    /**
+     * Calculates center positions for the shading bevels
+     * @return array of extremities for bevels
+     */
     public final double[] populateCenters() {
         double[] c = new double[4];
         double d = 0.25*Math.min((right - left),(down-up));
@@ -140,6 +146,7 @@ public class CollisionShape extends Object {
         return c;
     } 
 
+    // change instantiation type!
     public static void setType(types t) { type = t; }
 
     @Override
