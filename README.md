@@ -1,10 +1,18 @@
-Simple ball bounce simulation/demo with collision and walls.
+Simple ball bounce simulation with placeable walls.
 
-## **How to play:**
+### **How to play:**
+Just have fun! No real end goal or objective (yet), just watch the ball bounce ... and bounce ... and bounce again...
 
-There's not much you can do but I tried to make it reasonably fun. You can use your left and right arrow keys to speed up/slow down the ball. Careful not to make it too fast! You can also click and drag with your mouse to draw your own wall. Press 'P' to pause.
+#### Controls:
+- Mouse: used to place new boxes
+- Left Click: create box
+- Scroll: rotate box
+- Scroll + Shift: change height
+- Scroll + Alt: change width
+- Right/Left Arrows: Speed up/slow down ball
+- P: pause/unpause game
 
-## **Instructions for running:**
+### **Instructions for running:**
 
-Download the "BallBounce.jar" file and run it. If you do not have *Java* installed, you can install it [here](https://www.oracle.com/java/technologies/downloads/).
-Alternatively you can download all the class files and compile it yourself or peek at the code. Enjoy!
+Download the [latest release](https://github.com/OggyWoppy36/symmetrical-bassoon/releases/tag/v1.1.0) and run it. If you do not have *Java* installed, you can install it [here](https://www.oracle.com/java/technologies/downloads/).
+Alternatively you can download all the source code (class files) and compile it yourself or peek at the code. Enjoy!
