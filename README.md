@@ -14,5 +14,5 @@ Just have fun! No real end goal or objective (yet), just watch the ball bounce .
 
 ### **Instructions for running:**
 
-Download the "BallBounce.jar" file and run it. If you do not have *Java* installed, you can install it [here](https://www.oracle.com/java/technologies/downloads/).
+Download the [latest release](https://github.com/OggyWoppy36/symmetrical-bassoon/releases) and run it. If you do not have *Java* installed, you can install it [here](https://www.oracle.com/java/technologies/downloads/).
 Alternatively you can download all the class files and compile it yourself or peek at the code. Enjoy!
